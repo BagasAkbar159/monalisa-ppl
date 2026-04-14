@@ -43,7 +43,6 @@ class CustomerController extends Controller
                 'user_id' => $user->id,
                 'company_name' => $request->company_name,
                 'address' => $request->address,
-                'phone' => $request->phone,
                 'is_verified' => $request->boolean('is_verified', false),
                 'verified_at' => $request->boolean('is_verified') ? now() : null,
                 'is_active' => $request->boolean('is_active', true),
@@ -88,7 +87,6 @@ class CustomerController extends Controller
             $customer->update([
                 'company_name' => $request->company_name,
                 'address' => $request->address,
-                'phone' => $request->phone,
                 'is_verified' => $request->boolean('is_verified', false),
                 'verified_at' => $request->boolean('is_verified')
                     ? ($customer->verified_at ?? now())

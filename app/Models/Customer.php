@@ -13,7 +13,6 @@ class Customer extends Model
         'user_id',
         'company_name',
         'address',
-        'phone',
         'is_verified',
         'verified_at',
         'is_active',
