@@ -19,7 +19,7 @@ class StoreCustomerRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:20'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
 
-            'company_name' => ['nullable', 'string', 'max:255'],
+            'company_name' => ['required', 'string', 'max:255'],
             'address' => ['nullable', 'string'],
             'is_verified' => ['nullable', 'boolean'],
             'is_active' => ['nullable', 'boolean'],
