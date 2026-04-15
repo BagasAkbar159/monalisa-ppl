@@ -2,19 +2,28 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Driver extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'license_number',
+        'license_type',
+        'license_expiry_date',
+        'address',
+        'status',
+        'notes',
         'is_active',
     ];
 
     protected function casts(): array
     {
         return [
+            'license_expiry_date' => 'date',
             'is_active' => 'boolean',
         ];
     }

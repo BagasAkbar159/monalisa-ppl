@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\FarmerController;
 use App\Http\Controllers\Admin\VehicleController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\DriverController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,6 +22,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('farmers', FarmerController::class);
         Route::resource('vehicles', VehicleController::class);
         Route::resource('customers', CustomerController::class);
+        Route::resource('drivers', DriverController::class);
     });
 
 Route::middleware('auth')->group(function () {
