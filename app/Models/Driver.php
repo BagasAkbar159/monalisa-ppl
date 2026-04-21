@@ -15,6 +15,8 @@ class Driver extends Model
         'license_type',
         'license_expiry_date',
         'address',
+        'vehicle_type',
+        'plate_number',
         'status',
         'notes',
         'is_active',
