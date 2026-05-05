@@ -3,20 +3,20 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\ChickenProduction;
 use App\Models\Customer;
 use App\Models\Order;
 use Illuminate\Http\Request;
-use App\Models\ChickenProduction;
 
 class OrderController extends Controller
 {
+    private const OUTGOING_STATUSES = ['diproses', 'dikirim', 'selesai'];
+
     private function getAvailableChickenStock(?Order $ignoreOrder = null): int
     {
         $totalProduction = ChickenProduction::sum('quantity_chicken');
 
-        $outgoingStatuses = ['diproses', 'dikirim', 'selesai'];
-
-        $query = Order::whereIn('status', $outgoingStatuses);
+        $query = Order::whereIn('status', self::OUTGOING_STATUSES);
 
         if ($ignoreOrder) {
             $query->where('id', '!=', $ignoreOrder->id);
@@ -26,6 +26,12 @@ class OrderController extends Controller
 
         return $totalProduction - $totalOutgoing;
     }
+
+    private function shouldReduceStock(string $status): bool
+    {
+        return in_array($status, self::OUTGOING_STATUSES, true);
+    }
+
     public function index()
     {
         $orders = Order::with('customer.user')
@@ -57,21 +63,24 @@ class OrderController extends Controller
             'notes' => ['nullable', 'string'],
         ]);
 
+        $availableChicken = $this->getAvailableChickenStock();
+
+        if (
+            $this->shouldReduceStock($validated['status']) &&
+            $validated['quantity_chicken'] > $availableChicken
+        ) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'quantity_chicken' => 'Stock ayam tidak mencukupi. Stock tersedia saat ini: ' . $availableChicken . ' ekor.',
+                ]);
+        }
+
         $validated['order_code'] = $this->generateOrderCode();
         $validated['estimated_total'] = $validated['estimated_weight_kg'] * $validated['price_per_kg'];
         $validated['created_by'] = auth()->id();
 
         Order::create($validated);
-        $availableChicken = $this->getAvailableChickenStock();
-
-        if (in_array($validated['status'], ['diproses', 'dikirim', 'selesai']) &&
-            $validated['quantity_chicken'] > $availableChicken) {
-            return back()
-                ->withInput()
-                ->withErrors([
-                    'quantity_chicken' => 'Stock ayam tidak mencukupi untuk pesanan ini.',
-                ]);
-        }
 
         return redirect()
             ->route('admin.orders.index')
@@ -87,6 +96,12 @@ class OrderController extends Controller
 
     public function edit(Order $order)
     {
+        if ($order->status === 'dibatalkan') {
+            return redirect()
+                ->route('admin.orders.index')
+                ->with('error', 'Pesanan yang sudah dibatalkan tidak dapat diedit.');
+        }
+
         $customers = Customer::with('user')
             ->where('is_active', true)
             ->get();
@@ -96,31 +111,39 @@ class OrderController extends Controller
 
     public function update(Request $request, Order $order)
     {
+        if ($order->status === 'dibatalkan') {
+            return redirect()
+                ->route('admin.orders.index')
+                ->with('error', 'Pesanan yang sudah dibatalkan tidak dapat diperbarui.');
+        }
+
         $validated = $request->validate([
             'customer_id' => ['required', 'exists:customers,id'],
             'order_date' => ['required', 'date'],
             'quantity_chicken' => ['required', 'integer', 'min:1'],
             'estimated_weight_kg' => ['required', 'numeric', 'min:0.01'],
             'price_per_kg' => ['required', 'numeric', 'min:0'],
-            'status' => ['required', 'in:masuk,diproses,dikirim,selesai'],
+            'status' => ['required', 'in:masuk,diproses,dikirim,selesai,dibatalkan'],
             'notes' => ['nullable', 'string'],
         ]);
+
+        $availableChicken = $this->getAvailableChickenStock($order);
+
+        if (
+            $this->shouldReduceStock($validated['status']) &&
+            $validated['quantity_chicken'] > $availableChicken
+        ) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'quantity_chicken' => 'Stock ayam tidak mencukupi. Stock tersedia saat ini: ' . $availableChicken . ' ekor.',
+                ]);
+        }
 
         $validated['estimated_total'] = $validated['estimated_weight_kg'] * $validated['price_per_kg'];
 
         $order->update($validated);
 
-        $availableChicken = $this->getAvailableChickenStock($order);
-        
-        if (in_array($validated['status'], ['diproses', 'dikirim', 'selesai']) &&
-            $validated['quantity_chicken'] > $availableChicken) {
-            return back()
-                ->withInput()
-                ->withErrors([
-                    'quantity_chicken' => 'Stock ayam tidak mencukupi untuk pesanan ini.',
-                ]);
-        }
-        
         return redirect()
             ->route('admin.orders.index')
             ->with('success', 'Pesanan berhasil diperbarui.');
@@ -128,11 +151,25 @@ class OrderController extends Controller
 
     public function destroy(Order $order)
     {
-        $order->delete();
+        if ($order->status === 'selesai') {
+            return redirect()
+                ->route('admin.orders.index')
+                ->with('error', 'Pesanan yang sudah selesai tidak dapat dibatalkan.');
+        }
+
+        if ($order->status === 'dibatalkan') {
+            return redirect()
+                ->route('admin.orders.index')
+                ->with('error', 'Pesanan ini sudah dibatalkan sebelumnya.');
+        }
+
+        $order->update([
+            'status' => 'dibatalkan',
+        ]);
 
         return redirect()
             ->route('admin.orders.index')
-            ->with('success', 'Pesanan berhasil dihapus.');
+            ->with('success', 'Pesanan berhasil dibatalkan.');
     }
 
     private function generateOrderCode(): string
@@ -143,5 +180,4 @@ class OrderController extends Controller
 
         return 'ORD-' . $datePart . '-' . $sequence;
     }
-
 }

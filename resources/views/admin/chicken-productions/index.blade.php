@@ -1,89 +1,175 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="bg-white shadow rounded-lg p-6">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800">Produksi Ayam</h1>
-                <p class="text-sm text-gray-500">Data penambahan stok ayam hasil produksi.</p>
-            </div>
-            <a href="{{ route('admin.chicken-productions.create') }}"
-               class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-white hover:bg-blue-700">
-                Tambah Produksi
-            </a>
+<div class="space-y-6">
+    <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+            <h1 class="app-page-title">Produksi Ayam</h1>
+            <p class="app-page-subtitle">
+                Kelola data produksi atau panen ayam yang menjadi sumber stock masuk MONALISA.
+            </p>
         </div>
 
-        @if(session('success'))
-            <div class="mb-4 rounded-md bg-green-100 border border-green-300 text-green-800 px-4 py-3">
-                {{ session('success') }}
-            </div>
-        @endif
+        <div class="flex flex-wrap gap-2">
+            <a href="{{ route('admin.chicken-productions.create') }}" class="app-btn-accent">
+                Tambah Produksi
+            </a>
 
-        {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div class="bg-gray-50 border rounded-lg p-4">
-                <p class="text-sm text-gray-500">Total Jumlah Ayam</p>
-                <p class="text-2xl font-bold text-gray-800">{{ $totalChicken }}</p>
+            <a href="{{ route('admin.stock.index') }}" class="app-btn-secondary">
+                Lihat Stock
+            </a>
+        </div>
+    </div>
+
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+        <div class="app-card">
+            <div class="app-card-body">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500">Total Produksi</p>
+                        <p class="mt-3 text-3xl font-extrabold text-slate-900">
+                            {{ number_format($totalChicken ?? 0, 0, ',', '.') }}
+                        </p>
+                        <p class="mt-1 text-xs text-slate-500">
+                            Ekor ayam tercatat
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl bg-orange-50 p-3 text-orange-600">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                        </svg>
+                    </div>
+                </div>
             </div>
-            <div class="bg-gray-50 border rounded-lg p-4">
-                <p class="text-sm text-gray-500">Total Berat Ayam</p>
-                <p class="text-2xl font-bold text-gray-800">{{ number_format($totalWeight ?? 0, 2, ',', '.') }} kg</p>
+        </div>
+
+        <div class="app-card">
+            <div class="app-card-body">
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <p class="text-sm font-semibold text-slate-500">Total Berat</p>
+                        <p class="mt-3 text-3xl font-extrabold text-slate-900">
+                            {{ number_format($totalWeight ?? 0, 2, ',', '.') }}
+                        </p>
+                        <p class="mt-1 text-xs text-slate-500">
+                            Kilogram estimasi produksi
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl bg-blue-50 p-3 text-blue-600">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 7h12l1.5 13h-15L6 7Zm3 0a3 3 0 0 1 6 0" />
+                        </svg>
+                    </div>
+                </div>
             </div>
-        </div> --}}
+        </div>
+    </div>
+
+    <div class="app-card overflow-hidden">
+        <div class="border-b border-slate-200 px-6 py-5">
+            <div class="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-900">Riwayat Produksi</h2>
+                    <p class="mt-1 text-sm text-slate-500">
+                        Data produksi terbaru ditampilkan berdasarkan tanggal produksi.
+                    </p>
+                </div>
+            </div>
+        </div>
 
         <div class="overflow-x-auto">
-            <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-                <thead class="bg-gray-100">
+            <table class="min-w-full table-fixed divide-y divide-slate-200">
+                <thead class="bg-slate-50">
                     <tr>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Tanggal Produksi</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Jumlah Ayam</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Total Berat (kg)</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Dibuat Pada</th>
-                        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Catatan</th>
-                        <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">Aksi</th>
+                        <th class="w-[18%] px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                            Tanggal
+                        </th>
+                        <th class="w-[18%] px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+                            Jumlah Ayam
+                        </th>
+                        <th class="w-[18%] px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+                            Total Berat
+                        </th>
+                        <th class="w-[28%] px-6 py-3 text-left text-xs font-bold uppercase tracking-wider text-slate-500">
+                            Catatan
+                        </th>
+                        <th class="w-[18%] px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-slate-500">
+                            Aksi
+                        </th>
                     </tr>
                 </thead>
-                <tbody class="bg-white divide-y divide-gray-200">
-                    @forelse($productions as $production)
-                        <tr>
-                            <td class="px-4 py-3 text-sm text-gray-800">
-                                {{ \Carbon\Carbon::parse($production->production_date)->format('d-m-Y') }}
-                            </td>
-                            <td class="px-4 py-3 text-sm text-gray-800">
-                                {{ $production->quantity_chicken }}
-                            </td>
-                            <td class="px-4 py-3 text-sm text-gray-800">
-                                {{ number_format($production->total_weight_kg, 2, ',', '.') }}
-                            </td>
-                            <td class="px-4 py-3 text-sm text-gray-800">
-                                {{ $production->created_at ? $production->created_at->format('d-m-Y H:i') : '-' }}
-                            </td>
-                            <td class="px-4 py-3 text-sm text-gray-800">
-                                {{ $production->notes ?? '-' }}
-                            </td>
-                            <td class="px-4 py-3 text-sm text-center space-x-2">
-                                <a href="{{ route('admin.chicken-productions.show', $production->id) }}"
-                                   class="text-blue-600 hover:underline">Detail</a>
 
-                                <a href="{{ route('admin.chicken-productions.edit', $production->id) }}"
-                                   class="text-yellow-600 hover:underline">Edit</a>
+                <tbody class="divide-y divide-slate-100 bg-white">
+                    @forelse ($productions as $production)
+                        <tr class="transition hover:bg-slate-50">
+                            <td class="w-[18%] whitespace-nowrap px-6 py-4 text-sm text-slate-700">
+                                {{ $production->production_date ? $production->production_date->format('d M Y') : '-' }}
+                            </td>
 
-                                <form action="{{ route('admin.chicken-productions.destroy', $production->id) }}"
-                                      method="POST"
-                                      class="inline-block"
-                                      onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:underline">
-                                        Hapus
-                                    </button>
-                                </form>
+                            <td class="w-[18%] whitespace-nowrap px-6 py-4 text-right text-sm font-bold text-emerald-700">
+                                +{{ number_format($production->quantity_chicken ?? 0, 0, ',', '.') }} ekor
+                            </td>
+
+                            <td class="w-[18%] whitespace-nowrap px-6 py-4 text-right text-sm font-bold text-slate-900">
+                                {{ number_format($production->total_weight_kg ?? 0, 2, ',', '.') }} kg
+                            </td>
+
+                            <td class="w-[28%] px-6 py-4 text-sm text-slate-600">
+                                <span class="block truncate" title="{{ $production->notes ?: '-' }}">
+                                    {{ $production->notes ?: '-' }}
+                                </span>
+                            </td>
+
+                            <td class="w-[18%] whitespace-nowrap px-6 py-4 text-right">
+                                <div class="flex justify-end gap-3">
+                                    <a href="{{ route('admin.chicken-productions.show', $production) }}"
+                                       class="app-badge app-badge-blue">
+                                        Detail
+                                    </a>
+
+                                    <a href="{{ route('admin.chicken-productions.edit', $production) }}"
+                                       class="app-badge app-badge-orange">
+                                        Edit
+                                    </a>
+
+                                    <form action="{{ route('admin.chicken-productions.destroy', $production) }}"
+                                          method="POST"
+                                          onsubmit="return confirm('Yakin ingin menghapus data produksi ini? Stock akan ikut berubah karena produksi ini adalah sumber stock masuk.');">
+                                        @csrf
+                                        @method('DELETE')
+
+                                        <button type="submit"
+                                                class="app-badge app-badge-red">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-4 py-6 text-center text-sm text-gray-500">
-                                Belum ada data produksi ayam.
+                            <td colspan="5" class="px-6 py-14 text-center">
+                                <div class="mx-auto flex max-w-md flex-col items-center">
+                                    <div class="rounded-2xl bg-slate-100 p-4 text-slate-500">
+                                        <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M20 7 12 3 4 7m16 0-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                                        </svg>
+                                    </div>
+
+                                    <h3 class="mt-4 text-base font-bold text-slate-900">
+                                        Belum ada data produksi
+                                    </h3>
+
+                                    <p class="mt-1 text-sm text-slate-500">
+                                        Tambahkan produksi ayam pertama untuk mulai mencatat stock masuk.
+                                    </p>
+
+                                    <a href="{{ route('admin.chicken-productions.create') }}" class="app-btn-accent mt-5">
+                                        Tambah Produksi
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     @endforelse
@@ -91,9 +177,11 @@
             </table>
         </div>
 
-        <div class="mt-4">
-            {{ $productions->links() }}
-        </div>
+        @if ($productions->hasPages())
+            <div class="border-t border-slate-200 px-6 py-4">
+                {{ $productions->links() }}
+            </div>
+        @endif
     </div>
 </div>
 @endsection
