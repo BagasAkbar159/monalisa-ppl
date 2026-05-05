@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
-use Illuminate\View\View; 
+use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
@@ -22,7 +23,9 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register');
+        $cities = City::orderBy('name')->get();
+
+        return view('auth.register', compact('cities'));
     }
 
     /**
@@ -37,7 +40,10 @@ class RegisteredUserController extends Controller
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'phone' => ['required', 'string', 'max:20'],
             'company_name' => ['required', 'string', 'max:255'],
-            'address' => ['nullable', 'string'],
+            'city_id' => ['required', 'exists:cities,id'],
+            'district_id' => ['required', 'exists:districts,id'],
+            'village_name' => ['required', 'string', 'max:255'],
+            'detail_address' => ['required', 'string'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -55,7 +61,10 @@ class RegisteredUserController extends Controller
             Customer::create([
                 'user_id' => $user->id,
                 'company_name' => $validated['company_name'],
-                'address' => $validated['address'] ?? null,
+                'city_id' => $validated['city_id'],
+                'district_id' => $validated['district_id'],
+                'village_name' => $validated['village_name'],
+                'detail_address' => $validated['detail_address'],
                 'is_verified' => false,
                 'verified_at' => null,
                 'is_active' => true,

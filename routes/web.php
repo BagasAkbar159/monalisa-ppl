@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\DriverController;
 use App\Http\Controllers\Admin\ChickenProductionController;
 use App\Http\Controllers\Admin\StockController;
 use App\Http\Controllers\Admin\ChickenPriceCatalogController;
+use App\Http\Controllers\LocationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 
@@ -94,7 +95,8 @@ Route::middleware(['auth', 'role:direktur'])
         })->name('dashboard');
     });
 
-
+Route::get('/locations/cities/{city}/districts', [LocationController::class, 'getDistricts'])
+    ->name('locations.districts');
 
 
 require __DIR__.'/auth.php';

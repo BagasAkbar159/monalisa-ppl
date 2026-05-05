@@ -12,12 +12,14 @@ class Customer extends Model
     protected $fillable = [
         'user_id',
         'company_name',
-        'address',
+        'city_id',
+        'district_id',
+        'village_name',
+        'detail_address',
         'is_verified',
         'verified_at',
         'is_active',
     ];
-
     protected function casts(): array
     {
         return [
@@ -35,5 +37,15 @@ class Customer extends Model
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function city()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class);
     }
 }
