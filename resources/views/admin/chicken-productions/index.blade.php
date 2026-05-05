@@ -20,7 +20,7 @@
             </div>
         @endif
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div class="bg-gray-50 border rounded-lg p-4">
                 <p class="text-sm text-gray-500">Total Jumlah Ayam</p>
                 <p class="text-2xl font-bold text-gray-800">{{ $totalChicken }}</p>
@@ -29,7 +29,7 @@
                 <p class="text-sm text-gray-500">Total Berat Ayam</p>
                 <p class="text-2xl font-bold text-gray-800">{{ number_format($totalWeight ?? 0, 2, ',', '.') }} kg</p>
             </div>
-        </div>
+        </div> --}}
 
         <div class="overflow-x-auto">
             <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">

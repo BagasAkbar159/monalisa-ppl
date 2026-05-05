@@ -36,6 +36,12 @@
                         <x-nav-link :href="route('admin.drivers.index')" :active="request()->routeIs('admin.drivers.*')">
                             {{ __('Driver') }}
                         </x-nav-link>
+                        <x-nav-link :href="route('admin.orders.index')" :active="request()->routeIs('admin.orders.*')">
+                            {{ __('Pesanan') }}
+                        </x-nav-link>
+                        <x-nav-link :href="route('admin.chicken-price-catalogs.index')" :active="request()->routeIs('admin.chicken-price-catalogs.*')">
+                            {{ __('Katalog Harga Ayam') }}
+                        </x-nav-link>
                     @endrole
                 </div>
             </div>

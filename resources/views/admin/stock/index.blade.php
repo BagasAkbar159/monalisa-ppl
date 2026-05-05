@@ -15,17 +15,29 @@
             </a> --}}
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-5">
-                <p class="text-sm text-blue-700">Total Stock Ayam</p>
-                <p class="text-3xl font-bold text-blue-900">{{ $totalChicken }}</p>
-                <p class="text-sm text-blue-600 mt-1">ekor</p>
+                <p class="text-sm text-blue-700">Stock Masuk</p>
+                <p class="text-3xl font-bold text-blue-900">{{ $totalChickenProduction }}</p>
+                <p class="text-sm text-blue-600 mt-1">
+                    {{ number_format($totalWeightProduction ?? 0, 2, ',', '.') }} kg
+                </p>
+            </div>
+
+            <div class="bg-red-50 border border-red-200 rounded-lg p-5">
+                <p class="text-sm text-red-700">Stock Keluar</p>
+                <p class="text-3xl font-bold text-red-900">{{ $totalChickenOutgoing }}</p>
+                <p class="text-sm text-red-600 mt-1">
+                    {{ number_format($totalWeightOutgoing ?? 0, 2, ',', '.') }} kg
+                </p>
             </div>
 
             <div class="bg-green-50 border border-green-200 rounded-lg p-5">
-                <p class="text-sm text-green-700">Total Berat Stock</p>
-                <p class="text-3xl font-bold text-green-900">{{ number_format($totalWeight ?? 0, 2, ',', '.') }}</p>
-                <p class="text-sm text-green-600 mt-1">kg</p>
+                <p class="text-sm text-green-700">Stock Tersedia</p>
+                <p class="text-3xl font-bold text-green-900">{{ $availableChicken }}</p>
+                <p class="text-sm text-green-600 mt-1">
+                    {{ number_format($availableWeight ?? 0, 2, ',', '.') }} kg
+                </p>
             </div>
         </div>
 

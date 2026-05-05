@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ChickenProduction;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class StockController extends Controller
@@ -12,18 +13,21 @@ class StockController extends Controller
     {
         $filter = $request->get('filter', 'all');
 
-        $productionQuery = ChickenProduction::query();
-
         $totalChickenProduction = ChickenProduction::sum('quantity_chicken');
         $totalWeightProduction = ChickenProduction::sum('total_weight_kg');
 
-        // Untuk sekarang transaksi belum ada, jadi stok masih full dari produksi
-        $totalChicken = $totalChickenProduction;
-        $totalWeight = $totalWeightProduction;
+        $outgoingStatuses = ['diproses', 'dikirim', 'selesai'];
 
-        if ($filter === 'production' || $filter === 'all') {
-            $stockRows = $productionQuery
-                ->latest('production_date')
+        $totalChickenOutgoing = Order::whereIn('status', $outgoingStatuses)->sum('quantity_chicken');
+        $totalWeightOutgoing = Order::whereIn('status', $outgoingStatuses)->sum('estimated_weight_kg');
+
+        $availableChicken = $totalChickenProduction - $totalChickenOutgoing;
+        $availableWeight = $totalWeightProduction - $totalWeightOutgoing;
+
+        $stockRows = collect();
+
+        if ($filter === 'all' || $filter === 'production') {
+            $productionRows = ChickenProduction::latest('production_date')
                 ->latest()
                 ->get()
                 ->map(function ($item) {
@@ -36,19 +40,41 @@ class StockController extends Controller
                         'created_at' => $item->created_at,
                     ];
                 });
-        } else {
-            $stockRows = collect();
+
+            $stockRows = $stockRows->merge($productionRows);
         }
 
-        // Placeholder untuk transaksi, karena modul transaksi belum dibuat
-        if ($filter === 'transaction') {
-            $stockRows = collect();
+        if ($filter === 'all' || $filter === 'transaction') {
+            $transactionRows = Order::whereIn('status', $outgoingStatuses)
+                ->latest('order_date')
+                ->latest()
+                ->get()
+                ->map(function ($item) {
+                    return [
+                        'source' => 'Transaksi',
+                        'date' => $item->order_date,
+                        'quantity_chicken' => -1 * $item->quantity_chicken,
+                        'total_weight_kg' => -1 * $item->estimated_weight_kg,
+                        'notes' => 'Order: ' . $item->order_code . ' (' . ucfirst($item->status) . ')',
+                        'created_at' => $item->created_at,
+                    ];
+                });
+
+            $stockRows = $stockRows->merge($transactionRows);
         }
+
+        $stockRows = $stockRows->sortByDesc(function ($row) {
+            return $row['created_at'];
+        })->values();
 
         return view('admin.stock.index', compact(
             'filter',
-            'totalChicken',
-            'totalWeight',
+            'totalChickenProduction',
+            'totalWeightProduction',
+            'totalChickenOutgoing',
+            'totalWeightOutgoing',
+            'availableChicken',
+            'availableWeight',
             'stockRows'
         ));
     }
