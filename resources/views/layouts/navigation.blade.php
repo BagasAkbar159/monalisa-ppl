@@ -62,7 +62,14 @@
                 </svg>
                 <span>Dashboard</span>
             </a>
-
+            
+            <a href="{{ route('admin.profile') }}"
+            class="{{ $navItemClass(request()->routeIs('admin.profile')) }}">
+                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 7.5a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 15 0" />
+                </svg>
+                <span>Profil Admin</span>
+            </a>
             <p class="{{ $sectionClass }}">Operasional</p>
 
             <div class="space-y-2">
@@ -123,7 +130,7 @@
 
             <div class="space-y-2">
                 <a href="{{ route('customer.dashboard') }}"
-                   class="{{ $navItemClass(request()->routeIs('customer.dashboard')) }}">
+                class="{{ $navItemClass(request()->routeIs('customer.dashboard')) }}">
                     <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 13h8V3H3v10Zm10 8h8V3h-8v18ZM3 21h8v-6H3v6Z" />
                     </svg>
@@ -131,7 +138,7 @@
                 </a>
 
                 <a href="{{ route('customer.orders.create') }}"
-                   class="{{ $navItemClass(request()->routeIs('customer.orders.create')) }}">
+                class="{{ $navItemClass(request()->routeIs('customer.orders.create')) }}">
                     <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
                     </svg>
@@ -139,41 +146,61 @@
                 </a>
 
                 <a href="{{ route('customer.orders.index') }}"
-                   class="{{ $navItemClass(request()->routeIs('customer.orders.index') || request()->routeIs('customer.orders.show')) }}">
+                class="{{ $navItemClass(request()->routeIs('customer.orders.index') || request()->routeIs('customer.orders.show')) }}">
                     <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6M7 4h10l2 3v13H5V7l2-3Z" />
                     </svg>
                     <span>Pesanan Saya</span>
                 </a>
 
-                <a href="{{ route('profile.edit') }}"
-                   class="{{ $navItemClass(request()->routeIs('profile.edit')) }}">
+                <a href="{{ route('customer.profile') }}"
+                class="{{ $navItemClass(request()->routeIs('customer.profile')) }}">
                     <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 7.5a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.25a8.25 8.25 0 0 1 15 0" />
                     </svg>
-                    <span>Profil</span>
+                    <span>Profil Customer</span>
                 </a>
             </div>
-        @elseif ($user?->hasRole('driver'))
-            <p class="{{ $sectionClass }}">Driver</p>
+    @elseif ($user?->hasRole('driver'))
+        <p class="{{ $sectionClass }}">Driver</p>
 
+        <div class="space-y-2">
             <a href="{{ route('driver.dashboard') }}"
-               class="{{ $navItemClass(request()->routeIs('driver.dashboard')) }}">
+            class="{{ $navItemClass(request()->routeIs('driver.dashboard')) }}">
                 <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M3 13h18l-2-5H5l-2 5Zm2 0v5m14-5v5M7 18h.01M17 18h.01" />
                 </svg>
                 <span>Dashboard Driver</span>
             </a>
+
+            <a href="{{ route('driver.profile') }}"
+            class="{{ $navItemClass(request()->routeIs('driver.profile')) }}">
+                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 7.5a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.25a8.25 8.25 0 0 1 15 0" />
+                </svg>
+                <span>Profil Saya</span>
+            </a>
+        </div>
         @elseif ($user?->hasRole('direktur'))
             <p class="{{ $sectionClass }}">Direktur</p>
 
-            <a href="{{ route('direktur.dashboard') }}"
-               class="{{ $navItemClass(request()->routeIs('direktur.dashboard')) }}">
-                <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 19V5m5 14V9m5 10V7m5 12V3" />
-                </svg>
-                <span>Dashboard Direktur</span>
-            </a>
+            <div class="space-y-2">
+                <a href="{{ route('direktur.dashboard') }}"
+                class="{{ $navItemClass(request()->routeIs('direktur.dashboard')) }}">
+                    <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 19V5m5 14V9m5 10V7m5 12V3" />
+                    </svg>
+                    <span>Dashboard Direktur</span>
+                </a>
+
+                <a href="{{ route('direktur.profile') }}"
+                class="{{ $navItemClass(request()->routeIs('direktur.profile')) }}">
+                    <svg class="h-5 w-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 7.5a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.25a8.25 8.25 0 0 1 15 0" />
+                    </svg>
+                    <span>Profil Direktur</span>
+                </a>
+            </div>
         @endif
     </nav>
 

@@ -47,6 +47,10 @@ Route::middleware(['auth', 'role:admin'])
     ->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+        Route::get('/profile', function () {
+            return view('admin.profile');
+        })->name('profile');
+
         Route::resource('farmers', FarmerController::class);
         Route::resource('vehicles', VehicleController::class);
         Route::resource('customers', CustomerController::class);
@@ -71,6 +75,10 @@ Route::middleware(['auth', 'role:customer'])
             return view('customer.dashboard');
         })->name('dashboard');
 
+        Route::get('/profile', function () {
+            return view('customer.profile');
+        })->name('profile');
+
         Route::get('orders', [CustomerOrderController::class, 'index'])->name('orders.index');
         Route::get('orders/create', [CustomerOrderController::class, 'create'])->name('orders.create');
         Route::post('orders', [CustomerOrderController::class, 'store'])->name('orders.store');
@@ -81,18 +89,26 @@ Route::middleware(['auth', 'role:driver'])
     ->prefix('driver')
     ->name('driver.')
     ->group(function () {
-        Route::get('dashboard', function () {
+        Route::get('/dashboard', function () {
             return view('driver.dashboard');
         })->name('dashboard');
+
+        Route::get('/profile', function () {
+            return view('driver.profile');
+        })->name('profile');
     });
 
 Route::middleware(['auth', 'role:direktur'])
     ->prefix('direktur')
     ->name('direktur.')
     ->group(function () {
-        Route::get('dashboard', function () {
+        Route::get('/dashboard', function () {
             return view('direktur.dashboard');
         })->name('dashboard');
+
+        Route::get('/profile', function () {
+            return view('direktur.profile');
+        })->name('profile');
     });
 
 Route::get('/locations/cities/{city}/districts', [LocationController::class, 'getDistricts'])

@@ -41,7 +41,7 @@
                 Pesanan Saya
             </a>
 
-            <a href="{{ route('profile.edit') }}"
+            <a href="{{ route('customer.profile') }}"
                class="inline-flex items-center justify-center px-4 py-3 bg-slate-600 text-white rounded-md hover:bg-slate-700 font-semibold">
                 Profil Saya
             </a>

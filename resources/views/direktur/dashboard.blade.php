@@ -1,60 +1,116 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="mb-8">
-        <h1 class="text-2xl font-bold text-gray-100">Dashboard Admin</h1>
-        <p class="text-sm text-gray-300">Ringkasan data operasional MONALISA.</p>
+<div class="space-y-6">
+    <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+            <h1 class="app-page-title">Dashboard Direktur</h1>
+            <p class="app-page-subtitle">
+                Pantau ringkasan operasional MONALISA secara read-only.
+            </p>
+        </div>
+
+        <span class="app-badge app-badge-blue">
+            Direktur
+        </span>
     </div>
 
-    {{-- <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
-        <div class="bg-slate-50 shadow rounded-lg p-5 border border-slate-200">
-            <p class="text-sm text-gray-500">Total Stock Ayam</p>
-            <p class="text-3xl font-bold text-blue-700">{{ $totalChicken }}</p>
-            <p class="text-sm text-gray-400 mt-1">ekor</p>
+    <div class="grid gap-4 md:grid-cols-4">
+        <div class="app-card">
+            <div class="app-card-body">
+                <p class="text-sm font-semibold text-slate-500">Status Akses</p>
+                <p class="mt-3 text-3xl font-extrabold text-[#163A63]">Read</p>
+                <p class="mt-1 text-xs text-slate-500">Monitoring operasional</p>
+            </div>
         </div>
 
-        <div class="bg-slate-50 shadow rounded-lg p-5 border border-slate-200">
-            <p class="text-sm text-gray-500">Total Berat Stock</p>
-            <p class="text-3xl font-bold text-green-700">{{ number_format($totalWeight ?? 0, 2, ',', '.') }}</p>
-            <p class="text-sm text-gray-400 mt-1">kg</p>
+        <div class="app-card">
+            <div class="app-card-body">
+                <p class="text-sm font-semibold text-slate-500">Laporan</p>
+                <p class="mt-3 text-3xl font-extrabold text-slate-900">Soon</p>
+                <p class="mt-1 text-xs text-slate-500">Penjualan, stock, pengiriman</p>
+            </div>
         </div>
 
-        <div class="bg-slate-50 shadow rounded-lg p-5 border border-slate-200">
-            <p class="text-sm text-gray-500">Total Customer</p>
-            <p class="text-3xl font-bold text-purple-700">{{ $totalCustomers }}</p>
-            <p class="text-sm text-gray-400 mt-1">akun customer</p>
+        <div class="app-card">
+            <div class="app-card-body">
+                <p class="text-sm font-semibold text-slate-500">QC</p>
+                <p class="mt-3 text-3xl font-extrabold text-slate-900">Soon</p>
+                <p class="mt-1 text-xs text-slate-500">Kontrol kualitas</p>
+            </div>
         </div>
 
-        <div class="bg-slate-50 shadow rounded-lg p-5 border border-slate-200">
-            <p class="text-sm text-gray-500">Total Driver</p>
-            <p class="text-3xl font-bold text-orange-700">{{ $totalDrivers }}</p>
-            <p class="text-sm text-gray-400 mt-1">akun driver</p>
-        </div> --}}
+        <div class="app-card">
+            <div class="app-card-body">
+                <p class="text-sm font-semibold text-slate-500">Keuangan</p>
+                <p class="mt-3 text-3xl font-extrabold text-slate-900">Soon</p>
+                <p class="mt-1 text-xs text-slate-500">Invoice dan pembayaran</p>
+            </div>
+        </div>
     </div>
 
-    <div class="bg-slate-50 shadow rounded-lg p-6 border border-slate-200">
-        <h2 class="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h2>
+    <div class="grid gap-6 lg:grid-cols-3">
+        <div class="app-card lg:col-span-2">
+            <div class="app-card-body">
+                <h2 class="text-lg font-bold text-slate-900">Akses Direktur</h2>
+                <p class="mt-2 text-sm leading-6 text-slate-500">
+                    Akun direktur disiapkan untuk monitoring, laporan, dan pengambilan keputusan.
+                    Pada tahap ini, direktur tidak mengubah data operasional langsung.
+                </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-            <a href="{{ route('admin.chicken-productions.create') }}"
-               class="inline-flex items-center justify-center px-4 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-semibold">
-                Tambah Produksi
-            </a>
+                <div class="mt-6 grid gap-4 sm:grid-cols-2">
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                        <p class="font-bold text-slate-900">Dashboard Penjualan</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            Ringkasan penjualan dan pesanan akan ditampilkan setelah modul laporan selesai.
+                        </p>
+                    </div>
 
-            <a href="{{ route('admin.stock.index') }}"
-               class="inline-flex items-center justify-center px-4 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 font-semibold">
-                Lihat Stock
-            </a>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                        <p class="font-bold text-slate-900">Dashboard Stock</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            Monitoring stock dan produksi dapat dikembangkan sebagai laporan read-only.
+                        </p>
+                    </div>
 
-            <a href="{{ route('admin.customers.index') }}"
-               class="inline-flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-md hover:bg-purple-700 font-semibold">
-                Data Customer
-            </a>
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                        <p class="font-bold text-slate-900">Dashboard Pengiriman</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            Modul pengiriman belum aktif penuh, jadi dashboard ini disiapkan untuk tahap berikutnya.
+                        </p>
+                    </div>
 
-            <a href="{{ route('admin.drivers.index') }}"
-               class="inline-flex items-center justify-center px-4 py-3 bg-orange-600 text-white rounded-md hover:bg-orange-700 font-semibold">
-                Data Driver
+                    <div class="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                        <p class="font-bold text-slate-900">Dashboard QC</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-500">
+                            QC driver dan customer akan masuk ke ringkasan direktur setelah modul QC tersedia.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="app-card border-[#163A63]/20 bg-gradient-to-br from-white to-blue-50">
+                <div class="app-card-body">
+                    <h2 class="text-lg font-bold text-slate-900">Catatan Implementasi</h2>
+                    <p class="mt-2 text-sm leading-6 text-slate-500">
+                        Berdasarkan rancangan sistem, direktur berfokus pada dashboard dan laporan seperti penjualan,
+                        pengiriman, QC, dan keuangan bulanan.
+                    </p>
+
+                    <div class="mt-5 rounded-2xl bg-[#102C4D] p-5 text-white">
+                        <p class="text-sm font-semibold text-orange-200">Direktur Mode</p>
+                        <p class="mt-2 text-2xl font-extrabold">Monitoring</p>
+                        <p class="mt-3 text-sm leading-6 text-slate-200">
+                            Bukan CRUD. Bukan tombol hapus. Bukan tempat eksperimen nasib database.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <a href="{{ route('direktur.profile') }}" class="app-btn-secondary w-full">
+                Edit Akun Login
             </a>
         </div>
     </div>
